@@ -3,8 +3,8 @@ framework-js
 
 Моё представление о том каким должен быть фреймвор на Javascript для NodeJS.
 
-- [Структура папок](folder-structure.md)
-- [Контроллер](controller.md)
+- [Структура папок](doc/folder-structure.md)
+- [Контроллер](doc/controller.md)
 - Модель
 - Вьюшка (представление, view)
 - Роутинг
