@@ -5,7 +5,7 @@ framework-js
 
 - [Структура папок](doc/folder-structure.md)
 - [Контроллер](doc/controller.md)
-- Модель
+- [Модель](doc/model.md)
 - Вьюшка (представление, view)
 - Роутинг
 - Идентификация пользователя
