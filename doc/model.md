@@ -103,8 +103,9 @@ Post.remove({status: 'archive'})
         name: {type: String}
 
     post:
-        id:    {type: Number, index: 'primary'}
-        title: {type: String}
+        id:     {type: Number, index: 'primary'}
+        title:  {type: String}
+        status: {type: String}
         user_id:
             type: Number
             relation:
@@ -117,22 +118,23 @@ Post.remove({status: 'archive'})
 С помощью можно будет сгенерировать base файлы моделей.
 В отличии от языков с наследованием классов в JS просто генерируется класс с основными методами, а все кастомные методы после добавляются в прототип.
 
-Пример файла models/base/User.coffee
+Пример файла **models/base/User.coffee**
 ```coffeescript
 class User extends Model
     getId:    -> @get('id')
     getName:  -> @get('name')
     getPosts: -> Post.find({user_id: @getId()})
 ```
-Пример файла models/base/Post.coffee
+Пример файла **models/base/Post.coffee**
 ```coffeescript
 class Post extends Model
     getId:     -> @get('id')
     getTitle:  -> @get('title')
+    getStatus: -> @get('status')
     getUserId: -> @get('user_id')
     getUser:   -> User.findOne({id: @getUserId()})
 ```
-Пример файла models/Post.coffee
+Пример файла **models/Post.coffee**
 ```coffeescript
 Post::getUserPosts = ->
     Post.find({user_id: @getUserId()})
