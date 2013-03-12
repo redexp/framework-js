@@ -65,8 +65,8 @@ this.getPost = function(userId, status) {
 ## Класс Request
 
 - **get()** Возвращает объект с именами параметров в его полях и их значениями
-- **method(name)** Возвращает объект параметров определённого HTTP метода (GET, POST, PUT и т.д.)
-- **headers()** Возвращает объект параметров HTTP заголовка запроса (Content-Type, Accept и т.д.)
+- **getMethod(name)** Возвращает объект параметров определённого HTTP метода (GET, POST, PUT и т.д.)
+- **getHeaders()** Возвращает объект параметров HTTP заголовка запроса (Content-Type, Accept и т.д.)
 
 ## Класс Response
 
