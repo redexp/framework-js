@@ -1,4 +1,5 @@
-## Контроллер
+Контроллер
+==========
 
 - Структура
 - Приём параметров
@@ -72,5 +73,6 @@ this.getPost = function(userId, status) {
 
 - **getBody()** Возвращает тело ответа
 - **setBody(text)** Устанавливает тело ответа
-- **getHeader(name)** Возвращает HTTP заголовок ответа
-- **setHeader(name, value)** Устанавливает HTTP заголовок ответа
+- **getHeaders()** Возвращает HTTP заголовок
+- **getHeader(name)** Возвращает параметр HTTP заголовока
+- **setHeader(name, value)** Устанавливает параметр HTTP заголовока
