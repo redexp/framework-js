@@ -1,29 +1,97 @@
 Роутинг
 =======
 
-Роутинг описывается в файле который будет импортироваться как CommonJS модуль.
+- Конфигурация
+- Инклуд роутов
+- События
+- Модуль ParamConverter
 
+Роутинг описывается в файле который будет импортироваться как CommonJS модуль.
+Модуль представляет из себя массив объектов, которые описывают роут.
+
+Пример
 ```coffeescript
 controller = require('../controller/default')
 view = require('../view/json')
 
-@route = [
-    rule:   /\/posts$/
+@routes = [
+    rule:   ////posts$///
     action: controller.getPosts
 ,
     method: 'GET'
-    rule:   /\/user\/(?P<user_id>\d+)\/post\/(\d+)$/
+    rule:   ////post/(\d+)/user/(?P<user_id>\d+)$///
     action: controller.getPost
-    convert: [
-        params:  ['user_id']
-        handler: User.getByPK
-    ,
-        params:  [1]
-        handler: Post.getByPK
-    ]
 ,
-    rule:   /\/posts\/(\d+)\/comments$/
-    action: controller.getPostComments
+    rule:   ////posts\?/// # /post?id=100 - is valid
+    action: controller.getPost
     view:   view.toJson
 ]
 ```
+
+## Конфигурация
+
+Поля роута
+
+- rule
+- method
+- action
+- view
+
+### rule:
+
+Регулярное выражение по которому будет сравниваться URL и определяться какой контроллер должен его обработать.
+Всё что будет взято в скобки попадёт в виде аргументов в метод контроллера.
+В примере выше есть именованный параметр ```(?P<user_id>\d+)``` - это [стандартный способ в PRCE](http://www.regular-expressions.info/named.html) задания именнованных параметров.
+Вы можете его использовать, если хотите обращаться к параметрам не по индексу, а по имени ```request.get('user_id')```.
+
+### method:
+
+Название HTTP метода (GET, POST и т.д.).
+Роут сработает только когда метод запроса будет равен указанному в конфиге методу.
+Если метод в конфиге не указан, тогда роут будет выполняться при любом методе.
+
+### action:
+
+Метод, который должен обработать запрос.
+
+### view:
+
+Метод вьюшки (обработчик результата метода контроллера), который должен подготовить (присвоить тело, установить парметры заголовков) объект сингелтон класса Response.
+
+## Инклуд роутов
+
+Так как файл конфигурации роутов - это обычный js файл, то в него можно импортировать любые другие файлы с помощью ```require()```.
+
+Пример добавления
+```coffeescript
+controller = require('../controller/default')
+def = require('default')
+
+@routes = def.routes.concat([
+    rule:   /\/posts$/
+    action: controller.getPosts
+])
+```
+
+Именно таким способом подключаются конфиги роутов модулей в главный конфиг роутов фреймворка
+```coffeescript
+@routes = [].concat(
+    require('modules/SomeModuleName/config/routes').routes
+    require('modules/AnotherModuleName/config/routes').routes
+    require('modules/LastModuleName/config/routes').routes
+)
+```
+
+## События
+
+- valid-route
+
+Перед тем как выполнить метод контроллера, будет проверяться наличие подписанных обработчиков на событие **valid-route**, которым будет передан объект конфига роута.
+Если хотя бы один обработчик вернёт false, то роут считается невалидным и поиск продолжается дальше по списку роутов.
+
+## Модуль ParamConverter
+
+Этот модуль даёт возможность автоматически преобразовывать параметры запроса.
+Например в объект модели, строку в число или булевое значение.
+По умолчанию все параметры запроса приходят в виде строк.
+
