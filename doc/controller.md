@@ -10,15 +10,15 @@
 
 ## Структура
 
-Контроллеры будут представляться в виде файлов в которых будет описан [модуль CommonJS](http://habrahabr.ru/post/130035/).
+Контроллеры являются [модулями](http://nodejs.org/api/modules.html).
 
 Пример
 ```javascript
-this.getUsers = function(){
+exports.getUsers = function(){
     return User.getAll();
 };
 
-this.getUser = function(id){
+exports.getUser = function(id){
     return User.getByPk(id);
 };
 ```
@@ -34,34 +34,30 @@ this.getUser = function(id){
 
 Пример метода, который связан с роутом ```/post?user_id=100&status=published```
 ```javascript
-this.getPost = function(userId, status) {
+exports.getPost = function(userId, status) {
     return User.find({user_id: userId, status: status});
 }
 ```
 
 Соответственно второй способ получить все параметры можно из массива arguments.
 
-Последний способ - это получит параметры вызвав метод ```this.getRequest().get()``` который вернёт объект как показано на примере
-```javascript
-{
-    user_id: "100",
-    status:  "published",
-}
-```
+Последний способ это получить параметры из объекта класса Request вызвав метод ```this.getRequest()```
 
 ## Передача данных
 
-Всё что вернёт метод контроллера по умолчанию будет передано вьюшке с таким же именем как и сам метод.
-Имя вьюшки которой нужно передать данные можно поменять как в роутинге, так и в методе контроллера ```this.setView(name)```.
+Всё что вернёт метод контроллера будет передано вьюшке, которая по умолчанию будет искать файл, с темже именем что и метод, в папке **views** того же модуля.
+Имя файла можно поменять как в роутинге, так и в методе контроллера ```this.getView().setName('value')```.
 
-Результаты метода могут быть перехвачены по событию ```controller.action``` и обработынны без передачи их вьюшке.
+Вьюшка (обработчик результатов контроллера) может быть не только HTML, но и например JSON, т.е. результат контроллера будет сериалезирован в JSON строку.
 
 ## Класс Controller
 
 - **getRequest()** Возвращает объект класса Request
 - **getResponse()** Возвращает объект класса Response
 - **getView()** Возвращает имя файла вьюшки
-- **setView(name)** Устанавливает имя файла вьюшки
+- **setView(view)** Устанавливает имя файла вьюшки
+- **redirectTo(url)** Редиректит на указанный url
+- **forwardTo(url)** Передаёт выполнение на url
 
 ## Класс Request
 

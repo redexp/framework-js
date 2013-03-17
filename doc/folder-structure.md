@@ -3,8 +3,8 @@
     modules/
         ModuleName/
             config/
-            controllers/
             models/
+            controllers/
             views/
             tests/
 
