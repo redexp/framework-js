@@ -4,6 +4,7 @@ framework-js
 Моё представление о том каким должен быть фреймвор на Javascript для NodeJS.
 
 - [Структура папок](doc/folder-structure.md)
+- [Конфиг файлы](doc/config.md)
 - [Контроллер](doc/controller.md)
 - [Модель](doc/model.md)
 - [Вьюшка (представление, view)](doc/view.md)
