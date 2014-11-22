@@ -12,32 +12,43 @@
 
 ## Основной класс Model
 
-Все модели должны наследоваться от класса Model, который содержит в себе CRUD методы для работы с БД.
+Все модели должны наследоваться от класса Model, который содержит в себе CRUD методы для работы с БД. 
+Заточка на две базы данных MySQL и Mongo. Не нужно создавать тяжёлую ORM, достаточно сделать методы для типичных задач, а сложные запросы делать напрямую с валидируемыми параметрами, что бы избежать иньекций.
+
+Все CRUD методы возвращают промис объект.
 
 ### Create
 
-Добавлять модели в базу можно через метод save()
+Добавлять модели в базу можно через метод `insert()`. Почему не `save()`? По имени метода должно быть очевидно, какой запрос пойдёт в базу.
 
-```coffeescript
-user = new User()
-user.setName('Max')
-user.save()
+```javascript
+var user = new User();
+user
+  .setName('Max')
+  .insert()
+;
 ```
 
-Для того что бы пачкой сохранить несколько моделей можно воспользоваться методом save() самого класса
-```coffeescript
-user1 = new User()
-user2 = new User()
-User.save([user1, user2])
+Для того что бы пачкой сохранить несколько моделей можно воспользоваться методом `insert()` самого класса
+```javascript
+var user1 = new User();
+var user2 = new User();
+User.insert([user1, user2]);
 ```
 
 ### Read
 
-Методы выборки данных в точности копируют методы колекций MongoDB
+Все методы выборки данных:
 
-- [find()](http://docs.mongodb.org/manual/reference/method/db.collection.find/)
-- [findOne()](http://docs.mongodb.org/manual/reference/method/db.collection.findOne/)
-- [count()](http://docs.mongodb.org/manual/reference/method/db.collection.count/)
+`Model.query(string, [params])`
+```javascript
+User.query("select * from user where name like '%{name}%'", {name: 'value'})
+// можно начинать сразу с join или where
+User.query("where id = {id}", {id: '1;select *'})
+```
+- `findAll([whereParams], [options])`
+- `findFirst([whereParams], [options])`
+- `count([whereParams], [options])`
 
 А также методы для поиска по ключу
 
