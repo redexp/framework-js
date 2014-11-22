@@ -17,6 +17,8 @@
 
 Все CRUD методы возвращают промис объект.
 
+## MySQL адаптер
+
 ### Create
 
 Добавлять модели в базу можно через метод `insert()`. Почему не `save()`? По имени метода должно быть очевидно, какой запрос пойдёт в базу.
@@ -38,15 +40,23 @@ User.insert([user1, user2]);
 
 ### Read
 
+Пользователь ответсвенен за преобразование передаваемых данных. Использование обычных конструкторов достаточно для указания типов параметров. В случае со строками, все спец символы будут экранироваться, для избежания sql инъекций.
+
 Все методы выборки данных:
 
 `Model.query(string, [params])`
 ```javascript
-User.query("select * from user where name like '%{name}%'", {name: 'value'})
-// можно начинать сразу с join или where
-User.query("where id = {id}", {id: '1;select *'})
+User.query("select * from user where id = {id}", {id: Number(userId)})
 ```
-- `findAll([whereParams], [options])`
+`Model.select(string, [params])` можно начинать сразу с join или where
+```javascript
+User.select("join products as p on user.id = p.user_id where id = {id}", {id: Number(req.param('id'))})
+```
+`Model.findAll([whereParams], [options])`
+```javascript
+User.findAll({id: Number(id)}) // select user.* from user where id = {id}
+User.findAll({name: name}, {offset: 10, limit: 5})
+```
 - `findFirst([whereParams], [options])`
 - `count([whereParams], [options])`
 
